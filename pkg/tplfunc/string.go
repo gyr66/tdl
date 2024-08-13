@@ -11,6 +11,7 @@ var String = []Func{
 	Repeat(), Replace(),
 	ToUpper(), ToLower(),
 	SnakeCase(), CamelCase(), KebabCase(),
+	Truncate(),
 }
 
 func Repeat() Func {
@@ -61,6 +62,22 @@ func KebabCase() Func {
 	return func(funcMap template.FuncMap) {
 		funcMap["kebabcase"] = func(s string) string {
 			return strcase.ToKebab(s)
+		}
+	}
+}
+
+func Truncate() Func {
+	return func(funcMap template.FuncMap) {
+		funcMap["truncate"] = func(s string, n int) string {
+			// Handle Unicode correctly - https://stackoverflow.com/a/76502408
+			trunc := ""
+			for index, val := range s {
+				if index >= n {
+					break
+				}
+				trunc += string(val)
+			}
+			return trunc
 		}
 	}
 }
